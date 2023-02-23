@@ -55,9 +55,11 @@ class LiveTraceView(
     override fun build() = Unit
     override fun containsPoint(point: AnalysisListener.Point): Boolean = point == AnalysisListener.Point.Entry
     override fun parseEntry(span: SpanObject, segment: SegmentObject) {
+        log.debug("LiveTraceView: parseEntry(${span.operationName}")
         val entityId = span.operationName
         var subbedArtifacts = subscriptionCache["endpoint_traces"]
         if (subbedArtifacts != null) {
+            log.debug("subbedArtifacts[endpoint_traces].size: ${subbedArtifacts.size}")
             val subs = subbedArtifacts[entityId]
             if (!subs.isNullOrEmpty()) {
                 sendToSubs(segment, span, entityId, subs)
@@ -66,6 +68,7 @@ class LiveTraceView(
 
         subbedArtifacts = subscriptionCache["service_traces"]
         if (subbedArtifacts != null) {
+            log.debug("subbedArtifacts[service_traces].size: ${subbedArtifacts.size}")
             val subs = subbedArtifacts[segment.service]
             if (!subs.isNullOrEmpty()) {
                 sendToSubs(segment, span, entityId, subs)
@@ -74,6 +77,7 @@ class LiveTraceView(
     }
 
     private fun sendToSubs(segment: SegmentObject, span: SpanObject, entityId: String, subs: Set<ViewSubscriber>) {
+        log.debug("LiveTraceView: sendToSubs(${span.operationName}")
         val entrySpan = TraceSpan(
             segment.traceId,
             segment.traceSegmentId,
