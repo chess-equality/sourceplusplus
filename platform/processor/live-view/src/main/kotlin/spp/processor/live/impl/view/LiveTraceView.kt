@@ -62,15 +62,19 @@ class LiveTraceView(
             val subs = subbedArtifacts[entityId]
             if (!subs.isNullOrEmpty()) {
                 sendToSubs(segment, span, entityId, subs)
+            } else {
+                log.debug("No subscribers for endpoint: $entityId")
             }
         }
 
         subbedArtifacts = subscriptionCache["service_traces"]
         if (subbedArtifacts != null) {
-            log.debug("subbedArtifacts[service_traces].size: ${subbedArtifacts.size}")
+//            log.debug("subbedArtifacts[service_traces].size: ${subbedArtifacts.size}")
             val subs = subbedArtifacts[segment.service]
             if (!subs.isNullOrEmpty()) {
                 sendToSubs(segment, span, entityId, subs)
+            } else {
+                log.debug("No subscribers for service: ${segment.service}")
             }
         }
     }
