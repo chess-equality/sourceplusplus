@@ -212,6 +212,7 @@ class LiveViewServiceImpl : CoroutineVerticle(), LiveViewService {
         val consumer = vertx.eventBus().consumer<JsonObject>(address)
         consumer.handler {
             val event = it.body()
+            log.debug("Got event: {}", event)
             val viewEvent = if (event.getBoolean("multiMetrics")) {
                 val events = event.getJsonArray("metrics")
                 val firstEvent = events.getJsonObject(0)
@@ -238,6 +239,7 @@ class LiveViewServiceImpl : CoroutineVerticle(), LiveViewService {
             val eventJson = JsonObject.mapFrom(viewEvent)
             vertx.eventBus().publish(toLiveViewSubscription(sub.subscriptionId!!), eventJson)
             vertx.eventBus().publish(toLiveViewSubscriberAddress(devAuth.selfId), eventJson)
+            log.debug("Published event: {}", eventJson)
         }.completionHandler {
             if (it.succeeded()) {
                 val subscriber = ViewSubscriber(

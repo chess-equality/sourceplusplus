@@ -55,7 +55,6 @@ class LiveTraceView(
     override fun build() = Unit
     override fun containsPoint(point: AnalysisListener.Point): Boolean = point == AnalysisListener.Point.Entry
     override fun parseEntry(span: SpanObject, segment: SegmentObject) {
-        log.debug("LiveTraceView: parseEntry(${span.operationName}")
         val entityId = span.operationName
         var subbedArtifacts = subscriptionCache["endpoint_traces"]
         if (subbedArtifacts != null) {
@@ -137,6 +136,7 @@ class LiveTraceView(
                 .put("entityId", entityId)
                 .put("timeBucket", formatter.format(trace.start))
                 .put("trace", JsonObject.mapFrom(trace))
+            log.debug("Sending event to ${sub.consumer.address()}: $event")
             ClusterConnection.getVertx().eventBus().send(sub.consumer.address(), event)
         }
     }
