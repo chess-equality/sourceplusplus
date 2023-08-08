@@ -23,6 +23,13 @@ subprojects {
         resolutionStrategy.dependencySubstitution {
             substitute(module("plus.sourceplus:protocol"))
                 .using(project(":protocol"))
+
+            substitute(module("plus.sourceplus.interface:jetbrains-core"))
+                .using(project(":interfaces:jetbrains:core"))
+            substitute(module("plus.sourceplus.interface:jetbrains-marker"))
+                .using(project(":interfaces:jetbrains:marker"))
+            substitute(module("plus.sourceplus.interface:jetbrains-marker-jvm"))
+                .using(project(":interfaces:jetbrains:marker:jvm-marker"))
         }
     }
 
@@ -46,7 +53,8 @@ tasks {
             file("platform/bridge/build/libs/spp-platform-bridge-${project.version}.jar"),
             file("platform/storage/build/libs/spp-platform-storage-${project.version}.jar"),
             file("platform/processor/live-instrument/build/libs/spp-live-instrument-${project.version}.jar"),
-            file("platform/processor/live-view/build/libs/spp-live-view-${project.version}.jar")
+            file("platform/processor/live-view/build/libs/spp-live-view-${project.version}.jar"),
+            file("platform/processor/live-insight/build/libs/spp-live-insight-${project.version}.jar")
         )
     }
     register<Tar>("makeDist") {
